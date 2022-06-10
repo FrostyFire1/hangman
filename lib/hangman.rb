@@ -153,11 +153,11 @@ def ask_load
   puts 'Would you like to load a save? Y/y for yes, anything else for no'
   response = gets.chomp.downcase
   if response == 'y'
-    puts 'Which save would you like to load? Omit the file extension'
+    puts 'Which save would you like to load?'
     save_list = Dir.entries('saves')
     puts 'Available saves:'
     save_list.each_with_index { |save, index| puts save if index > 1}
-    chosen_save = gets.chomp.downcase << '.yaml'
+    chosen_save = gets.chomp.downcase
     if File.exist?("saves/#{chosen_save}")
       return File.read("saves/#{chosen_save}")
     else
