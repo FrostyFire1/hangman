@@ -28,7 +28,7 @@ class Game
 
   def choose_word
     word_list = get_words
-    @word = word_list.sample.chomp
+    @word = word_list.sample
     @word_letters = @word.split('').uniq
   end
 
@@ -39,7 +39,7 @@ class Game
     file_content = File.readlines(file)
     word_list = []
     file_content.each do |word|
-      word_list.push(word) if word.length.between?(5, 12)
+      word_list.push(word.chomp) if word.chomp.length.between?(5, 12)
     end
     word_list
   end
@@ -91,6 +91,7 @@ class Game
       else
         word_info << '_'
       end
+      word_info << ' '
     end
     puts "Guesses left: #{@max_guesses - @incorrect_guesses}"
     puts "Incorrect guesses: #{@incorrect_letters.join(', ')}"
