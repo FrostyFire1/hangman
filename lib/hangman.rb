@@ -10,9 +10,11 @@ class Game
   def initialize(player)
     @player = player
     @word = nil
+    @word_letters = @word.split('').uniq
     @cur_guesses = 0
     @max_guesses = 8
     @incorrect_guesses = []
+    @guessed_letters = []
   end
 
   def start
@@ -39,7 +41,21 @@ class Game
     end
     word_list
   end
-  def play_game
 
+  def play_game
+    puts 'Guess a letter'
+    guess = gets.chomp.downcase
+    unless guess =~ /^[a-z]$/
+      puts 'Invalid input! Please type in a single letter.'
+      play_game
+    end
+    if @word.include?(guess)
+      @guessed_letters << guess
+    else
+      @incorrect_guesses << guess
+    end
+    @cur_guesses += 1
+    return win if @word_letters.difference(@guessed_letters).empty?
+    return lose if @cur_guesses == @max_guesses
   end
 end
