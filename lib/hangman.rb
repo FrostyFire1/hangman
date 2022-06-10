@@ -1,9 +1,23 @@
+require 'yaml'
 class Player
   attr_reader(:name)
-  def initialize(name)
+  def initialize(name, wins = 0, losses = 0)
     @name = name
-    @wins = 0
-    @losses = 0
+    @wins = wins
+    @losses = losses
+  end
+
+  def to_yaml
+    YAML.dump({
+      name: @name,
+      wins: @wins,
+      losses: @losses
+    })
+  end
+
+  def self.from_yaml(string)
+    data = YAML.load string
+    new(data[:name], data[:wins], data[:losses])
   end
 end
 
