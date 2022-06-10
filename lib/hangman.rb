@@ -15,6 +15,14 @@ class Game
     @incorrect_guesses = []
   end
 
+  def start
+    choose_word
+    puts 'Good luck!'
+    play_game
+  end
+
+  private
+
   def choose_word
     word_list = get_words
     @word = word_list.sample
@@ -23,6 +31,7 @@ class Game
   def get_words
     file = 'dictionary.txt'
     raise ArgumentError, "#{file} not found!" unless File.exist?(file)
+
     file_content = File.readlines(file)
     word_list = []
     file_content.each do |word|
@@ -30,10 +39,7 @@ class Game
     end
     word_list
   end
+  def play_game
 
-  def start
-    choose_word
-    puts 'Good luck!'
-    make_guess
   end
 end
