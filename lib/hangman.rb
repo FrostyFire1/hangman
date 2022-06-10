@@ -47,19 +47,24 @@ class Game
     guess = gets.chomp.downcase
     return play_game unless is_valid?(guess)
 
-    if @word.include?(guess)
-      @guessed_letters << guess
-    else
-      @incorrect_guesses << guess
-    end
+    handle_guess(guess)
     @cur_guesses += 1
     return win if @word_letters.difference(@guessed_letters).empty?
     return lose if @cur_guesses == @max_guesses
+    play_game
   end
 
   def is_valid?(guess)
     [@incorrect_guesses.include?(guess),
      @guessed_letters.include?(guess),
      guess !~ /^[a-z]$/].none?
+  end
+
+  def handle_guess(guess)
+    if @word.include?(guess)
+      @guessed_letters << guess
+    else
+      @incorrect_guesses << guess
+    end
   end
 end
