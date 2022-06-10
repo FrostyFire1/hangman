@@ -45,10 +45,8 @@ class Game
   def play_game
     puts 'Guess a letter'
     guess = gets.chomp.downcase
-    unless guess =~ /^[a-z]$/
-      puts 'Invalid input! Please type in a single letter.'
-      play_game
-    end
+    return play_game unless is_valid?(guess)
+
     if @word.include?(guess)
       @guessed_letters << guess
     else
@@ -57,5 +55,11 @@ class Game
     @cur_guesses += 1
     return win if @word_letters.difference(@guessed_letters).empty?
     return lose if @cur_guesses == @max_guesses
+  end
+
+  def is_valid?(guess)
+    [@incorrect_guesses.include?(guess),
+     @guessed_letters.include?(guess),
+     guess !~ /^[a-z]$/].none?
   end
 end
