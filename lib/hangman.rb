@@ -60,9 +60,16 @@ class Game
   end
 
   def is_valid?(guess)
-    [@incorrect_letters.include?(guess),
-     @guessed_letters.include?(guess),
-     guess !~ /^[a-z]$/].none?
+    puts
+    if @incorrect_letters.include?(guess) || @guessed_letters.include?(guess)
+      puts 'You already guessed that!'
+      false
+    elsif guess !~ /^[a-z]$/
+      puts 'Invalid input! Please type in a letter'
+      false
+    else
+      true
+    end
   end
 
   def handle_guess(guess)
@@ -95,6 +102,7 @@ class Game
 
   def lose
     puts "You lose, #{@player.name}!"
+    puts "The word was: #{@word}"
   end
 end
 
