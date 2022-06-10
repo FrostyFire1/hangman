@@ -103,7 +103,7 @@ class Game
     puts
     if @incorrect_letters.include?(guess) || @guessed_letters.include?(guess)
       puts 'You already guessed that!'
-      puts "Guessed letters: #{(@incorrect_letters << @guessed_letters).flatten.uniq.join(', ')}"
+      puts "Guessed letters: #{(@incorrect_letters + @guessed_letters).flatten.uniq.join(', ')}"
       false
     elsif guess !~ /^[a-z]$/
       puts 'Invalid input! Please type in a letter'
