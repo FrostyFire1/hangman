@@ -14,4 +14,10 @@ class Game
     @max_guesses = 8
     @incorrect_guesses = []
   end
+
+  def start
+    choose_word
+    puts 'Good luck!'
+    make_guess
+  end
 end
