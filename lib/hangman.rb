@@ -51,6 +51,7 @@ class Game
     @cur_guesses += 1
     return win if @word_letters.difference(@guessed_letters).empty?
     return lose if @cur_guesses == @max_guesses
+
     play_game
   end
 
@@ -67,4 +68,17 @@ class Game
       @incorrect_guesses << guess
     end
   end
+
+  def win
+    puts 'You win!'
+  end
+
+  def lose
+    puts 'You lose!'
+  end
 end
+
+player = Player.new('Bitflipping Barry')
+
+game = Game.new(player)
+game.start
