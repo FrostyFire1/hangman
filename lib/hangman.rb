@@ -22,14 +22,34 @@ class Player
 end
 
 class Game
-  def initialize(player)
+
+  def initialize(player, word = nil, word_letters = nil, incorrect_guesses = 0, 
+                 max_guesses = 8, incorrect_letters = [], guessed_letters = [])
     @player = player
-    @word = nil
-    @word_letters = nil
-    @incorrect_guesses = 0
-    @max_guesses = 8
-    @incorrect_letters = []
-    @guessed_letters = []
+    @word = word
+    @word_letters = word_letters
+    @incorrect_guesses = incorrect_guesses
+    @max_guesses = max_guesses
+    @incorrect_letters = incorrect_letters
+    @guessed_letters = guessed_letters
+  end
+
+  def to_yaml
+    YAML.dump({
+      player: @player,
+      word: @word,
+      word_letters: @word_letters,
+      incorrect_guesses: @incorrect_guesses,
+      max_guesses: @max_guesses,
+      incorrect_letters: @incorrect_letters,
+      guessed_letters: @guessed_letters
+    })
+  end
+
+  def from_yaml(string)
+    data = YAML.load string
+    new(data[:player], data[:word], data[:word_letters], data[:incorrect_guesses],
+        data[:max_guesses], data[:incorrect_letters], data[:guessed_letters])
   end
 
   def start
