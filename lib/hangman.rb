@@ -1,4 +1,5 @@
 class Player
+  attr_reader(:name)
   def initialize(name)
     @name = name
     @wins = 0
@@ -10,10 +11,10 @@ class Game
   def initialize(player)
     @player = player
     @word = nil
-    @word_letters = @word.split('').uniq
-    @cur_guesses = 0
+    @word_letters = nil
+    @incorrect_guesses = 0
     @max_guesses = 8
-    @incorrect_guesses = []
+    @incorrect_letters = []
     @guessed_letters = []
   end
 
@@ -27,7 +28,8 @@ class Game
 
   def choose_word
     word_list = get_words
-    @word = word_list.sample
+    @word = word_list.sample.chomp
+    @word_letters = @word.split('').uniq
   end
 
   def get_words
@@ -48,33 +50,51 @@ class Game
     return play_game unless is_valid?(guess)
 
     handle_guess(guess)
-    @cur_guesses += 1
+    display_info
     return win if @word_letters.difference(@guessed_letters).empty?
-    return lose if @cur_guesses == @max_guesses
+    return lose if @incorrect_guesses == @max_guesses
 
+    puts
+    puts
     play_game
   end
 
   def is_valid?(guess)
-    [@incorrect_guesses.include?(guess),
+    [@incorrect_letters.include?(guess),
      @guessed_letters.include?(guess),
      guess !~ /^[a-z]$/].none?
   end
 
   def handle_guess(guess)
     if @word.include?(guess)
+      puts "#{guess} is in the word!"
       @guessed_letters << guess
     else
-      @incorrect_guesses << guess
+      puts "#{guess} is not in the word!"
+      @incorrect_letters << guess
+      @incorrect_guesses += 1
     end
   end
 
+  def display_info
+    word_info = ''
+    @word.split('').each do |letter|
+      if @guessed_letters.include?(letter)
+        word_info << letter
+      else
+        word_info << '_'
+      end
+    end
+    puts "Incorrect guesses: #{@incorrect_letters.join(', ')}"
+    puts word_info
+  end
+
   def win
-    puts 'You win!'
+    puts "You win, #{@player.name}!"
   end
 
   def lose
-    puts 'You lose!'
+    puts "You lose, #{@player.name}!"
   end
 end
 
