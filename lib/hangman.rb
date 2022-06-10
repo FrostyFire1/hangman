@@ -1,6 +1,6 @@
 require 'yaml'
 class Player
-  attr_reader(:name)
+  attr_accessor(:name, :wins, :losses)
   def initialize(name, wins = 0, losses = 0)
     @name = name
     @wins = wins
@@ -46,8 +46,8 @@ class Game
     })
   end
 
-  def from_yaml(string)
-    data = YAML.load string
+  def self.from_yaml(string)
+    data = YAML.load(string, permitted_classes: [Symbol, Game, Player])
     new(data[:player], data[:word], data[:word_letters], data[:incorrect_guesses],
         data[:max_guesses], data[:incorrect_letters], data[:guessed_letters])
   end
@@ -79,8 +79,9 @@ class Game
   end
 
   def play_game
-    puts 'Guess a letter'
+    puts 'Guess a letter or type save to save and quit the game!'
     guess = gets.chomp.downcase
+    return save if guess == 'save'
     return play_game unless is_valid?(guess)
 
     handle_guess(guess)
@@ -93,10 +94,16 @@ class Game
     play_game
   end
 
+  def save
+    game_id = Dir.entries('saves').length - 1 # - 1 because this lists "." and ".."
+    save = File.open("saves/game#{game_id}.yaml", 'w+')
+    save.puts to_yaml
+  end
   def is_valid?(guess)
     puts
     if @incorrect_letters.include?(guess) || @guessed_letters.include?(guess)
       puts 'You already guessed that!'
+      puts "Guessed letters: #{(@incorrect_letters << @guessed_letters).flatten.uniq.join(', ')}"
       false
     elsif guess !~ /^[a-z]$/
       puts 'Invalid input! Please type in a letter'
@@ -142,7 +149,31 @@ class Game
   end
 end
 
-player = Player.new('Bitflipping Barry')
+def ask_load
+  puts 'Would you like to load a save? Y/y for yes, anything else for no'
+  response = gets.chomp.downcase
+  if response == 'y'
+    puts 'Which save would you like to load? Omit the file extension'
+    save_list = Dir.entries('saves')
+    puts 'Available saves:'
+    save_list.each_with_index { |save, index| puts save if index > 1}
+    chosen_save = gets.chomp.downcase << '.yaml'
+    if File.exist?("saves/#{chosen_save}")
+      return File.read("saves/#{chosen_save}")
+    else
+      puts "File doesn't exist!"
+      return
+    end
+  end
+end
 
-game = Game.new(player)
+player = Player.new('Bitflipping Barry')
+to_load = ask_load
+
+game = if to_load.nil?
+         Game.new(player)
+       else
+         Game.from_yaml(to_load)
+       end
 game.start
+

@@ -1,0 +1,22 @@
+---
+:player: !ruby/object:Player
+  name: Bitflipping Barry
+  wins: 0
+  losses: 0
+:word: cheque
+:word_letters:
+- c
+- h
+- e
+- q
+- u
+:incorrect_guesses: 5
+:max_guesses: 8
+:incorrect_letters:
+- a
+- b
+- o
+- i
+- j
+:guessed_letters:
+- h
