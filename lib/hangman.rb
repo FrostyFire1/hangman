@@ -92,6 +92,7 @@ class Game
         word_info << '_'
       end
     end
+    puts "Guesses left: #{@max_guesses - @incorrect_guesses}"
     puts "Incorrect guesses: #{@incorrect_letters.join(', ')}"
     puts word_info
   end
